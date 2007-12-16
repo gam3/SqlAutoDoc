@@ -8,6 +8,7 @@ postgresql-autodoc (1.30-2) unstable; urgency=low
     + Wrap long description to 80 characters.
     + Standards-Version bumped to 3.7.3 (no changes required).
     + Add new Homepage field.
+    + Add new Vcs-* fields.
   * debian/copyright:
     + Update the years in the copyright field.
     + Add new Debian maintainer.
@@ -18,7 +19,7 @@ postgresql-autodoc (1.30-2) unstable; urgency=low
   * debian/patches/02_synopsis_correction.dpatch: Add a description of the
     patch. (Fixes lintian warning about missing description.)
 
- -- Tim Retout <tim@retout.co.uk>  Sun, 16 Dec 2007 22:27:56 +0000
+ -- Tim Retout <tim@retout.co.uk>  Sun, 16 Dec 2007 23:28:26 +0000
 
 postgresql-autodoc (1.30-1) unstable; urgency=low
 
