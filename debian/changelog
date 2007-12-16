@@ -1,8 +1,11 @@
 postgresql-autodoc (1.30-2) unstable; urgency=low
 
   * New maintainer. (Closes: #439534)
+  * debian/compat: Bump debhelper compatibility level to 5.
+  * debian/control:
+    + Bump Build-Depends on debhelper to at least version 5 (see above).
 
- -- Tim Retout <tim@retout.co.uk>  Sun, 16 Dec 2007 22:06:24 +0000
+ -- Tim Retout <tim@retout.co.uk>  Sun, 16 Dec 2007 22:08:12 +0000
 
 postgresql-autodoc (1.30-1) unstable; urgency=low
 
