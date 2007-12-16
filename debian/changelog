@@ -6,9 +6,10 @@ postgresql-autodoc (1.30-2) unstable; urgency=low
     + Bump Build-Depends on debhelper to at least version 5 (see above).
     + Change "PostrgreSQL" to "PostgreSQL" in description. (Closes: #447688)
     + Wrap long description to 80 characters.
-    + Standards-Version bumped to 3.7.3 (no changes required). 
+    + Standards-Version bumped to 3.7.3 (no changes required).
+    + Add new Homepage field. 
 
- -- Tim Retout <tim@retout.co.uk>  Sun, 16 Dec 2007 22:19:57 +0000
+ -- Tim Retout <tim@retout.co.uk>  Sun, 16 Dec 2007 22:21:04 +0000
 
 postgresql-autodoc (1.30-1) unstable; urgency=low
 

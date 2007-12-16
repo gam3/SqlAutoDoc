@@ -5,6 +5,7 @@ Maintainer: Tim Retout <tim@retout.co.uk>
 Build-Depends: debhelper (>> 5.0.0), dpatch
 Build-Depends-Indep: libdbd-pg-perl, libhtml-template-perl, libterm-readkey-perl
 Standards-Version: 3.7.3
+Homepage: http://www.rbt.ca/autodoc/
 
 Package: postgresql-autodoc
 Architecture: all
