@@ -10,7 +10,7 @@ Package: postgresql-autodoc
 Architecture: all
 Depends: ${perl:Depends}, libdbd-pg-perl, libhtml-template-perl, libterm-readkey-perl
 Recommends: graphviz, docbook-book, dia | dia-gnome, lynx | www-browser
-Description: utility to create PostrgreSQL database schema overview in HTML, DOT and XML
+Description: Utility to create a PostgreSQL database schema overview in HTML, DOT and XML
  This is a utility which will run through PostgreSQL tables and returns 
  HTML, DOT, and 2 styles of XML which describes the database.
  .
