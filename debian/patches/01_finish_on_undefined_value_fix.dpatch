@@ -1,0 +1,19 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 01_finish_on_undefined_value_fix.dpatch by Tommaso Moroni <moronito@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff -urNad postgresql-autodoc-1.25~/postgresql_autodoc.pl postgresql-autodoc-1.25/postgresql_autodoc.pl
+--- postgresql-autodoc-1.25~/postgresql_autodoc.pl	2005-05-03 04:05:56.000000000 +0200
++++ postgresql-autodoc-1.25/postgresql_autodoc.pl	2006-05-01 14:48:23.000000000 +0200
+@@ -1200,7 +1200,7 @@
+     $sth_Primary_Keys->finish();
+     $sth_Schema->finish();
+     $sth_Tables->finish();
+-    $sth_Table_Statistics->finish();
++    $sth_Table_Statistics->finish() if $statistics;
+ 
+ } ## end sub info_collect($$$$$)
+ 

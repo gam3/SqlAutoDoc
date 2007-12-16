@@ -99,5 +99,6 @@ configure: configure.ac
 
 # Fix my makefile, then execute myself
 $(CONFIGFILE) : config.mk.in configure
-	./configure
-	$(MAKE) $(MAKEFLAGS)
+#	./configure --prefix=\$${DESTDIR} --bindir=\$${prefix}/bin --datadir=\$${prefix}/share/postgresql-autodoc
+	./configure --prefix=/usr --bindir=\$${prefix}/bin --datadir=\$${prefix}/share/postgresql-autodoc
+	$(MAKE)
