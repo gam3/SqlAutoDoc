@@ -36,6 +36,7 @@ build-stamp:  config.status
 	touch build-stamp
 
 clean: clean-patched unpatch
+	rm -f config.sub config.guess
 
 clean-patched:
 	dh_testdir
