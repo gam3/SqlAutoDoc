@@ -36,19 +36,12 @@ build-stamp:  config.status
 	touch build-stamp
 
 clean: clean-patched unpatch
-	rm -f config.sub config.guess
 
 clean-patched:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp 
 	$(MAKE) distribution-clean RM="rm -f"
-ifneq "$(wildcard /usr/share/misc/config.sub)" ""
-	cp -f /usr/share/misc/config.sub config.sub
-endif
-ifneq "$(wildcard /usr/share/misc/config.guess)" ""
-	cp -f /usr/share/misc/config.guess config.guess
-endif
 	dh_clean
 
 install: build
