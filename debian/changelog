@@ -3,11 +3,14 @@ postgresql-autodoc (1.31-1) UNRELEASED; urgency=low
   * New upstream version.
     + Fixes compatibility with recent libdbd-pg-perl. (Closes: #469715)
   * debian/rules:
+    + Touch config.mk before running 'make distribution-clean', so that we
+      never try to use upstream's rule to create it.
     + config.sub and config.guess are unused by ./configure, so remove
       altogether.
   * debian/control: Remove build dependency on autotools-dev.
+  * Makefile: Remove change to config.mk creation rule from Debian diff.
 
- -- Tim Retout <tim@retout.co.uk>  Fri, 02 May 2008 00:34:03 +0100
+ -- Tim Retout <tim@retout.co.uk>  Fri, 02 May 2008 00:39:35 +0100
 
 postgresql-autodoc (1.30-2) unstable; urgency=low
 

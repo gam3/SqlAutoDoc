@@ -41,6 +41,7 @@ clean-patched:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp 
+	touch config.mk
 	$(MAKE) distribution-clean RM="rm -f"
 	dh_clean
 
