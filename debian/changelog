@@ -1,3 +1,10 @@
+postgresql-autodoc (1.31-1) UNRELEASED; urgency=low
+
+  * New upstream version.
+    + Fixes compatibility with recent libdbd-pg-perl. (Closes: #469715)
+
+ -- Tim Retout <tim@retout.co.uk>  Fri, 02 May 2008 00:09:44 +0100
+
 postgresql-autodoc (1.30-2) unstable; urgency=low
 
   * New maintainer. (Closes: #439534)
