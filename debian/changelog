@@ -1,10 +1,13 @@
-postgresql-autodoc (1.31-1.1) UNRELEASED; urgency=low
+postgresql-autodoc (1.40-0.1) UNRELEASED; urgency=low
 
   * Non-maintainer upload.
+  * New upstream version. (Closes: #532614)
   * debian/watch:
     + Fix to work with upstream web site.
+  * debian/rules:
+    + Removed autoconf-related stuff that is no longer used.
 
- -- Peter Eisentraut <petere@debian.org>  Wed, 10 Jun 2009 16:52:38 +0300
+ -- Peter Eisentraut <petere@debian.org>  Wed, 10 Jun 2009 17:04:10 +0300
 
 postgresql-autodoc (1.31-1) unstable; urgency=low
 
