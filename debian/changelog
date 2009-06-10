@@ -6,6 +6,8 @@ postgresql-autodoc (1.40-0.1) UNRELEASED; urgency=low
     + Fix to work with upstream web site.
   * debian/rules:
     + Removed autoconf-related stuff that is no longer used.
+  * debian/copyright:
+    + Update the years in the copyright field.
 
  -- Peter Eisentraut <petere@debian.org>  Wed, 10 Jun 2009 17:04:10 +0300
 
