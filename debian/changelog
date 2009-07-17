@@ -13,10 +13,13 @@ postgresql-autodoc (1.40-1) unstable; urgency=low
 
   [ Tim Retout ]
   * debian/compat: Update compat level to 7.
-  * debian/control: Build-Depend on debhelper 7.
+  * debian/control:
+    + Build-Depend on debhelper 7.
+    + Standards-Version bumped to 3.8.2.
+    + Section is now 'database'.
   * debian/rules: Use dh_prep, not dh_clean -k.
 
- -- Tim Retout <tim@retout.co.uk>  Fri, 17 Jul 2009 12:14:58 +0100
+ -- Tim Retout <tim@retout.co.uk>  Fri, 17 Jul 2009 12:53:51 +0100
 
 postgresql-autodoc (1.31-1) unstable; urgency=low
 

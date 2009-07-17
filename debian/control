@@ -1,10 +1,10 @@
 Source: postgresql-autodoc
-Section: utils
+Section: database
 Priority: optional
 Maintainer: Tim Retout <tim@retout.co.uk>
 Build-Depends: debhelper (>> 7), dpatch
 Build-Depends-Indep: libdbd-pg-perl, libhtml-template-perl, libterm-readkey-perl
-Standards-Version: 3.8.1
+Standards-Version: 3.8.2
 Homepage: http://www.rbt.ca/autodoc/
 Vcs-Git: git://git.debian.org/git/collab-maint/postgresql-autodoc.git
 Vcs-Browser: http://git.debian.org/?p=collab-maint/postgresql-autodoc.git
