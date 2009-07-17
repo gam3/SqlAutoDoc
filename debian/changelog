@@ -1,6 +1,6 @@
-postgresql-autodoc (1.40-0.1) UNRELEASED; urgency=low
+postgresql-autodoc (1.40-1) unstable; urgency=low
 
-  * Non-maintainer upload.
+  [ Peter Eisentraut ]
   * New upstream version. (Closes: #532614)
   * debian/watch:
     + Fix to work with upstream web site.
@@ -11,7 +11,12 @@ postgresql-autodoc (1.40-0.1) UNRELEASED; urgency=low
   * debian/control:
     + Standards-Version bumped to 3.8.1 (no changes required).
 
- -- Peter Eisentraut <petere@debian.org>  Wed, 10 Jun 2009 17:04:10 +0300
+  [ Tim Retout ]
+  * debian/compat: Update compat level to 7.
+  * debian/control: Build-Depend on debhelper 7.
+  * debian/rules: Use dh_prep, not dh_clean -k.
+
+ -- Tim Retout <tim@retout.co.uk>  Fri, 17 Jul 2009 12:14:58 +0100
 
 postgresql-autodoc (1.31-1) unstable; urgency=low
 
