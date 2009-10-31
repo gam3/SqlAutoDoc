@@ -1,3 +1,10 @@
+postgresql-autodoc (1.40-2) UNRELEASED; urgency=low
+
+  * debian/control:
+    + Update Standards-Version to 3.8.3. (No changes needed.)
+
+ -- Tim Retout <tim@retout.co.uk>  Sat, 31 Oct 2009 22:23:05 +0000
+
 postgresql-autodoc (1.40-1) unstable; urgency=low
 
   [ Peter Eisentraut ]
