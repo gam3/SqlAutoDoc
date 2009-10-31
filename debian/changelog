@@ -2,6 +2,12 @@ postgresql-autodoc (1.40-2) UNRELEASED; urgency=low
 
   * debian/control:
     + Update Standards-Version to 3.8.3. (No changes needed.)
+    + Use quilt instead of dpatch in Build-Depends.
+  * debian/rules: include quilt makefile instead of dpatch.
+  * debian/patches/:
+    + Rename '02_synopsis_correction.dpatch' to 'synopsis-correction'.
+    + Use 'series' instead of '00list' file.
+  * debian/patches/synopsis-correction: Clean up description.
 
  -- Tim Retout <tim@retout.co.uk>  Sat, 31 Oct 2009 22:23:05 +0000
 

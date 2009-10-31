@@ -1,10 +1,6 @@
-#! /bin/sh /usr/share/dpatch/dpatch-run
-## 02_synopsis_correction.dpatch by  <moronito@debian.org>
-##
-## All lines beginning with `## DP:' are a description of the patch.
-## DP: Correct the command-line option documentation printed with --help.
+Author: Tommaso Moroni <moronito@debian.org>
+Description: Correct the command-line option documentation printed with --help.
 
-@DPATCH@
 diff -urNad postgresql-autodoc-1.30~/postgresql_autodoc.pl postgresql-autodoc-1.30/postgresql_autodoc.pl
 --- postgresql-autodoc-1.30~/postgresql_autodoc.pl	2007-01-02 15:42:55.000000000 +0100
 +++ postgresql-autodoc-1.30/postgresql_autodoc.pl	2007-01-28 08:09:28.000000000 +0100

@@ -5,13 +5,13 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-include /usr/share/dpatch/dpatch.make
+include /usr/share/quilt/quilt.make
 
 build: build-indep
 
 build-indep: build-stamp
 
-build-stamp: patch-stamp
+build-stamp: $(QUILT_STAMPFN)
 	dh_testdir
 	$(MAKE) PREFIX=/usr
 	touch build-stamp
