@@ -4,6 +4,7 @@ postgresql-autodoc (1.40-3) UNRELEASED; urgency=low
     + Update maintainer email address.
     + Add ${misc:Depends} to Depends field.
     + Bump Standards-Version to 3.8.4. (No changes needed.)
+  * debian/source/format: Use format 3.0 (quilt).
 
  -- Tim Retout <diocles@debian.org>  Thu, 28 Jan 2010 22:46:05 +0000
 
