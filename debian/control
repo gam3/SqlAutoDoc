@@ -1,7 +1,7 @@
 Source: postgresql-autodoc
 Section: database
 Priority: optional
-Maintainer: Tim Retout <tim@retout.co.uk>
+Maintainer: Tim Retout <diocles@debian.org>
 Build-Depends: debhelper (>> 7), quilt
 Build-Depends-Indep: libdbd-pg-perl, libhtml-template-perl, libterm-readkey-perl
 Standards-Version: 3.8.3

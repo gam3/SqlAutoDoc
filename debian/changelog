@@ -1,3 +1,10 @@
+postgresql-autodoc (1.40-3) UNRELEASED; urgency=low
+
+  * debian/control:
+    + Update maintainer email address.
+
+ -- Tim Retout <diocles@debian.org>  Thu, 28 Jan 2010 22:46:05 +0000
+
 postgresql-autodoc (1.40-2) unstable; urgency=low
 
   * debian/control:
