@@ -1,6 +1,7 @@
 postgresql-autodoc (1.41-1) UNRELEASED; urgency=low
 
   * New upstream version.
+    + debian/patches/synopsis-correction: Remove, applied upstream.
   * debian/control:
     + Remove Build-Depends on quilt.
     + Fix capitalization of 'DocBook' in Description.
