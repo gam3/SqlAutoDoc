@@ -1,3 +1,9 @@
+postgresql-autodoc (1.41-1) UNRELEASED; urgency=low
+
+  * New upstream version.
+
+ -- Tim Retout <diocle@debian.org>  Thu, 26 Jan 2012 20:30:55 +0000
+
 postgresql-autodoc (1.40-3) unstable; urgency=low
 
   * debian/control:
