@@ -129,7 +129,7 @@ class Database
   attr_accessor :comment
   def initialize(n)
     @name = n
-    @schemas = Hash.new{ |h, k| h[k] = Schema.new(k) }
+    @schemas = Hash.new{ |h, k| h[k] = Schema.new(k, n) }
   end
   def get_schema(name)
     @schemas[name]
@@ -145,14 +145,18 @@ class Database
   class Schema
     attr_accessor :comment
     attr_reader :name
-    def initialize(n)
+    def initialize(n, database)
       @name = n
-      @tables = Hash.new{ |h, k| h[k] = Table.new(k) }
+      @database = database
+      @tables = Hash.new{ |h, k| h[k] = Table.new(k, n, @database) }
     end
     def get_column(table_name, column_name)
       @tables[table_name].get_column(column_name)
     end
     def get_table(name)
+      unless @tables[name].schema
+raise "error"
+      end
       @tables[name]
     end
     def each_table
@@ -168,6 +172,7 @@ class Database
 	  attr_accessor :schema
 	  attr_accessor :table
 	  attr_accessor :column
+	  attr_accessor :schema
 	  def initialize(name)
 	    @name = name
 	  end
@@ -219,7 +224,6 @@ class Database
 	  ret = Array.new
 	  @constraints.each do |k, v|
 	    if v.type == :foreign_key
-PP.pp v, STDERR
               ret.push [v.schema, v.table, v.column].join('.')
 	    end
 	  end
@@ -254,21 +258,32 @@ PP.pp v, STDERR
       attr_accessor :type
       attr_accessor :table_description
       attr_accessor :view_definition
-      def initialize(name)
+      attr_accessor :schema
+      def initialize(name, schema, database)
 	@name = name
+	@schema = schema
+	@database = database
 	@columns = Hash.new{ |h, k| h[k] = Column.new(k) }
 	@users = Hash.new{ |h, k| h[k] = User.new(k) }
+	@inherite_from = Array.new
+	@inherited_by = Array.new
+	@indexes = Array.new
+	@contraint = Hash.new
       end
       def set_permitions(a, b, c)
         user = @users[a]
         user.granted_by = c
         user.raw_permissions = b
       end
-      def add_inheritance(a)
-STDERR.puts "FIXME"
+      def add_inherited_by(schema, table)
+        @inherited_by.push [schema, table]
       end
-      def add_index(a)
-STDERR.puts "FIXME"
+      def add_inheritance(schema, table, cs, ct)
+        @inherite_from.push [schema, table]
+	Database[@database].get_schema(schema).get_table(table).add_inherited_by(@schema, @name)
+      end
+      def add_index(schema, table, index, indexdef, definition)
+        @indexes.push [ schema, table, index, indexdef, definition ]
       end
       def get_column(name)
         column = @columns[name]
@@ -279,7 +294,7 @@ STDERR.puts "FIXME"
 	end
       end
       def add_constraint(name, definition)
-STDERR.puts "add_constraint #{name}"
+        @contraint[name] = definition
       end
     end # class Table
   end # class Schema
@@ -638,12 +653,14 @@ WHERE pg_namespace.nspname !~ $1
 
     # Pull out index information
     conn.exec_prepared('indexes', [ schema.name, table.name ]).each do |row|
-      table.add_index(row)
+      i = OpenStruct.new row
+      table.add_index( i.schemaname, i.tablename, i.indexname, i.indexdef, i.definition )
     end
 
     # Extract Inheritance information
     conn.exec_prepared('inheritance', [ schema.name, table.name, schemapattern ]).each do |row|
-      table.add_inheritance(row)
+      inheritance = OpenStruct.new row
+      table.add_inheritance(inheritance.par_schemaname, inheritance.par_tablename, inheritance.chl_schemaname, inheritance.chl_tablename)
     end
   end
 
