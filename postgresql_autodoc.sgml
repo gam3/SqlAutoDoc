@@ -1,0 +1,195 @@
+<!doctype refentry PUBLIC "-//OASIS//DTD DocBook V4.1//EN" [
+  <!ENTITY debian  "<productname>Debian GNU/Linux</productname>">
+  <!ENTITY docbook "<productname>DocBook</productname>">
+  <!ENTITY sgml    "<abbrev>SGML</abbrev>">
+]>
+
+<!-- Manual page for postgresql_autodoc, DocBook source file
+     (C) 2014 G. Allen Morris III &gt;gam3@gam3.net&lt;
+
+     $Id$ -->
+
+<refentry>
+  <refentryinfo>
+    <address>
+      <email>gam3@gam3.net</email>
+    </address>
+    <author>
+      <firstname>G. Allen</firstname>
+      <surname>Morris</surname>
+      <linage>III</linage>
+    </author>
+    <date>2014-08-23</date>
+  </refentryinfo>
+  <refmeta>
+    <refentrytitle>postgresql_autodoc</refentrytitle>
+    <manvolnum>1</manvolnum>
+  </refmeta>
+  <refnamediv>
+    <refname>postgresql_autodoc</refname>
+    <refpurpose>generate documentation for a postgresql database from a postgresql database</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>postgresql_autodoc</command>
+      <arg><option>-d</option> <replaceable>dbname</replaceable></arg>
+      <arg><option>-f</option> <replaceable>file</replaceable></arg>
+      <arg><option>-h</option> <replaceable>host</replaceable></arg>
+      <arg><option>-p</option> <replaceable>port</replaceable></arg>
+      <arg><option>-u</option> <replaceable>username</replaceable></arg>
+      <arg><option>--password</option> <replaceable>pw</replaceable></arg>
+      <arg><option>-l</option> <replaceable>path</replaceable></arg>
+      <arg><option>-t</option> <replaceable>output</replaceable></arg>
+      <arg><option>-s</option> <replaceable>schema</replaceable></arg>
+      <arg><option>--statistics</option><replaceable/></arg>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+  <refsect1>
+    <title>DESCRIPTION</title>
+
+    <para>This is a utility which will run through PostgreSQL system
+    tables and returns HTML, DOT, and 2 styles of XML which describes
+    the database.</para>
+
+    <para>The HTML is human readable (via webbrowser). The first style
+    of XML is actually the fileformat of Dia, a UML diagram tool. The
+    second type of XML is similar to the HTML but in the Docbook 4
+    format. It enables yous to mix in other docbook documentation via
+    the XREFs, generating PDFs, HTML, RTF, or other formatted documents.
+    Between these tools and JavaDoc with the appropriate XREFs,
+    documentation about a project can be generated quickly and be easily
+    updatable yet have a very profes‐ sional look with some DSSSL
+    work.</para>
+  </refsect1>
+  <refsect1>
+    <title>OPTIONS</title>
+    <variablelist>
+      <varlistentry>
+	<term><option>-d</option> <replaceable>dbname</replaceable></term>
+	<listitem>
+	  <para>
+	    Specify database name to connect to (default: user)
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><option>-f</option> <replaceable>file</replaceable></term>
+	<listitem>
+	  <para>
+	    Specify output file prefix (default: database)
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><option>-h</option> <replaceable>host</replaceable></term>
+	<listitem>
+	  <para>
+	    Specify database server host (default: localhost)
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><option>-p</option> <replaceable>port</replaceable></term>
+	<listitem>
+	  <para>
+	    Specify database server port (default: 5432)
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><option>-u</option> <replaceable>username</replaceable></term>
+	<listitem>
+	  <para>
+	    Specify database username (default: $dbuser)
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><option>--password</option> <replaceable>pw</replaceable></term>
+	<listitem>
+	  <para>
+	    Specify database password (default: blank)
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><option>-l</option> <replaceable>path</replaceable></term>
+	<listitem>
+	  <para>
+	    Path to the templates (default: /usr/share/postgresql_autodoc)
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><option>-t</option> <replaceable>output</replaceable></term>
+	<listitem>
+	  <para>
+	    Type of output wanted (default: All in template library)
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><option>-s</option> <replaceable>schema</replaceable></term>
+	<listitem>
+	  <para>
+            Specify a specific schema to match. Technically this is a
+            regular expression but anything other than a specific name
+            may have unusual results.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>--statistics</option><replaceable/></term>
+        <listitem>
+          <para>
+	    In 7.4 and later, with the contrib module pgstattuple
+	    installed we can gather statistics on the tables in the
+	    database (average size, free space, disk space used, dead
+	    tuple counts, etc.) This is disk intensive on large
+	    databases as all pages must be visited.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+  <refsect1>
+    <title>COPYRIGHT</title>
+
+    <para>Copyright (c) Rod Taylor &gt;autodoc@rbt.ca&gt;</para>
+    <para>Copyright (c) 2014 G. Allen Morris III</para>
+
+    <para>Permission is hereby granted, free of charge, to any person
+      obtaining a copy of this software and associated documentation
+      files (the "Software"), to deal in the Software without
+      restriction, including without limitation the rights to use,
+      copy, modify, merge, publish, distribute, sublicense, and/or
+      sell copies of the Software, and to permit persons to whom the
+      Software is furnished to do so, subject to the following
+      conditions:</para>
+
+    <para>The above copyright notice and this permission notice shall
+      be included in all copies or substantial portions of the
+      Software.</para>
+
+    <para>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
+      KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+      WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
+      AND NONINFRINGEMENT.  IN NO EVENT SHALL THE X CONSORTIUM OR
+      DALRYMPLE CONSULTING BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+      LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+      ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+      USE OR OTHER DEALINGS IN THE SOFTWARE.</para>
+
+    <para>Except as contained in this notice, the names of the X
+      Consortium and Dalrymple Consulting shall not be used in
+      advertising or otherwise to promote the sale, use or other
+      dealings in this Software without prior written
+      authorization.</para>
+
+  </refsect1>
+  <refsect1>
+    <title>See also</title>
+
+    <para>instant(1) and transpec(5)</para>
+  </refsect1>
+</refentry>
