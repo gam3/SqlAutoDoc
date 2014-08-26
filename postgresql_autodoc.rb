@@ -131,11 +131,17 @@ class Database
     @name = n
     @schemas = Hash.new{ |h, k| h[k] = Schema.new(k, n) }
   end
+  def title
+    @name + ' Model'
+  end
   def get_schema(name)
     @schemas[name]
   end
+  def get_table(name, table_name)
+    @schemas[name].get_table(table_name)
+  end
   def get_column(name, table_name, column_name)
-      @schemas[name].get_table(table_name).get_column(column_name)
+    @schemas[name].get_table(table_name).get_column(column_name)
   end
   def each_schema
     @schemas.each do |n, v|
@@ -164,6 +170,13 @@ raise "error"
 	yield n
       end
     end
+    def title
+      'Schema#title'
+    end
+    # get each line of description
+    def description
+      @comment
+    end
     class Table
       class Column
         class Constraint
@@ -189,23 +202,36 @@ raise "error"
 	attr_accessor :fktable
 	attr_accessor :type
 	attr_accessor :comment
-	attr_accessor :default
 	attr_accessor :not_null
+	attr_writer :default
+	def default
+	  "DEFAULT #{@default}"
+	end
+	def default?
+	  !@default.nil?
+	end
 	def initialize(name)
 	  @name = name
 	  @constraints = Hash.new{ |h, k| h[k] = Constraint.new(k) }
 	  @indexes = Hash.new{ |h, k| h[k] = Constraint.new(k) }
 	  @inherits = Hash.new{ |h, k| h[k] = Constraint.new(k) }
-	  @description = ''
+	  @description = Array.new
+	  @fk_refs = Array.new
+	end
+	def add_fk_ref(a, b, c)
+	  @fk_refs.push [a, b, c]
+	end
+	def set_fk(a, b, c)
+	  @fktable = [a, b, c].join('.')
 	end
 	def add_constraint(name, definition)
 	  case definition
 	  when :unique
 	    @unique = true
-	    @description += 'UNIQUE'
+	    @description << 'UNIQUE'
 	  when :primary_key
 	    @primary_key = true
-	    @description += 'PRIMARY KEY'
+	    @description << 'PRIMARY KEY'
 	  else
 	    raise definition.to_s
           end
@@ -229,6 +255,22 @@ raise "error"
 	  end
 	  ret.join(', ')
 	end
+	def dbref
+	  data = @fktable.split('.')
+	  "#{data[0]}.table.#{data[1]}".gsub(/_/, '-')
+	end
+	def references?
+	  @fktable
+	end
+	def description_each
+          temp = @description.dup
+	  if @not_null && !@primary_key
+	    temp << 'NOT NULL'
+	  end
+	  temp.each do |x|
+	    yield x
+	  end
+	end
 	def description
 	  ret = @description
 	  if @not_null && !@primary_key
@@ -236,10 +278,16 @@ raise "error"
 	  end
 	  ret
 	end
+	def indexes?
+	  @indexes.size > 0
+	end
 	def each_index
 	  @indexes.each do |k, v|
 	    yield v
 	  end
+	end
+	def inherit?
+	  @inherits.size > 0
 	end
 	def each_inherit
 	  @inherits.each do |k, v|
@@ -259,6 +307,8 @@ raise "error"
       attr_accessor :table_description
       attr_accessor :view_definition
       attr_accessor :schema
+      attr_accessor :dbid
+      attr_accessor :schema_name
       def initialize(name, schema, database)
 	@name = name
 	@schema = schema
@@ -269,6 +319,12 @@ raise "error"
 	@inherited_by = Array.new
 	@indexes = Array.new
 	@contraint = Hash.new
+	@dbid = "#{schema}.table.#{name}".gsub(/_/, '-')
+	@schema_name = "#{schema}.#{name}"
+	@fk_refs = Array.new
+      end
+      def add_fk_ref(column, a, b, c)
+	@fk_refs.push Hash[:column => column, :ref => [a, b, c]]
       end
       def set_permitions(a, b, c)
         user = @users[a]
@@ -289,12 +345,46 @@ raise "error"
         column = @columns[name]
       end
       def each_column
-        @columns.each do |k, v|
+        @columns.values.sort{ |a, b| a.order <=> b.order }.each do |v|
 	  yield v
 	end
       end
       def add_constraint(name, definition)
         @contraint[name] = definition
+      end
+      def view?
+        @view_definition
+      end
+      def view
+        @view_definition
+      end
+      def contraints?
+        @contraint.keys.size > 0
+      end
+      def each_contraint
+	@contraint.each do |k, v|
+	  yield k, v
+	end
+      end
+      def indexes?
+	@indexes.size > 0
+      end
+      def each_index
+	@indexes.each do |k, v|
+	  yield k, v
+	end
+      end
+      def fk_refs?
+        @fk_refs.size > 0
+      end
+      def each_fk
+        @fk_refs.each do |x|
+	  y = [x[:ref][0], 'table', x[:ref][1]].join('.').gsub(/_/, '-')
+	  yield y
+	end
+      end
+      def title
+        "#{self}#{'title'}"
       end
     end # class Table
   end # class Schema
@@ -303,7 +393,7 @@ end # class Database
 def database_collect(options)
   database_name = options.database
   host = options.host
-  user = options.user
+  user = options.user || ENV['USER']
   password = options.password
   port = options.port
   conn = PGconn.open(:dbname => database_name, :host => host, :user => user, :password => password)
@@ -605,7 +695,6 @@ WHERE pg_namespace.nspname !~ $1
 
       collist.each do |column_name|
         column = table.get_column(column_name)
-#STDERR.puts pricols.inspect
 	column.add_constraint(pricols.constraint_name, pricols.constraint_type.to_sym)
       end
 
@@ -618,15 +707,9 @@ WHERE pg_namespace.nspname !~ $1
     # a table in multi-column format. We use the same trick to
     # record a numeric association to the foreign key reference.
 
-    # NOTE is schemapattern need hear.  We should not have iods for table in other schemas
+    # NOTE is schemapattern needed here.  We should not have iods for table in other schemas
     conn.exec_prepared('foreign keys', [ r.oid, schemapattern ]).each do |row|
       forcols = OpenStruct.new(row)
-
-      forcols.oid
-      forcols.constraint_name
-      forcols.constraint_fkey
-      forcols.constraint_key
-      forcols.foreignrelid
 
       fkeyset = forcols.constraint_fkey[1..-2].split(/,\s/).map{ |i| i.to_i }
       keyset = forcols.constraint_key[1..-2].split(/,\s/).map{ |i| i.to_i }
@@ -644,10 +727,11 @@ WHERE pg_namespace.nspname !~ $1
       fkeylist.zip(keylist).each do |list|
         fkey = list[0]
         key = list[1]
-        c = database.get_column(key.namespace, key.relation_name, key.attribute_name)
-        con = database.get_column(key.namespace, key.relation_name, key.attribute_name).get_constraint(forcols.constraint_name)
-        con.set_fkcolumn(fkey.namespace, fkey.relation_name, fkey.attribute_name)
-	con.type = :foreign_key
+        table = database.get_table(fkey.namespace, fkey.relation_name)
+	column = table.get_column(fkey.attribute_name)
+	table.add_fk_ref(fkey.attribute_name, key.namespace, key.relation_name, key.attribute_name)
+	column.add_fk_ref(key.namespace, key.relation_name, key.attribute_name)
+	database.get_column(key.namespace, key.relation_name, key.attribute_name).set_fk(fkey.namespace, fkey.relation_name, fkey.attribute_name)
       end
     end
 
@@ -690,7 +774,17 @@ def get_head
   File.open('./head.html').read
 end
 
-database_name = "gam3"
+require 'autodoc/docbook'
+
+database_name = options.database
+
+database = Database[database_name]
+#pp database
+File.open('out.xml', 'w') do |file|
+  file.puts x = Autodoc::Docbook.generate(database)
+end
+
+exit
 
 require 'nokogiri'
 builder = Nokogiri::HTML::Builder.new do |xml|
@@ -720,7 +814,6 @@ builder = Nokogiri::HTML::Builder.new do |xml|
 		}
 		xml.tbody {
 		  table.each_column do |column|
-#PP.pp(column, STDERR)
 		    xml.tr {
 		      xml.td {
 			xml.a :name => 'public.' + table.name + '.' + column.name
