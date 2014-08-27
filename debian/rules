@@ -30,7 +30,7 @@ install: build
 	dh_testroot
 	dh_prep
 	dh_installdirs
-	$(MAKE) install PREFIX=/usr DESTDIR=$(CURDIR)/debian/postgresql-autodoc/
+	$(MAKE) install PREFIX=/usr DESTDIR=$(CURDIR)/debian/sqlautodoc/
 
 
 binary-arch: build install
@@ -41,7 +41,7 @@ binary-indep: build install
 	dh_testroot
 	dh_installchangelogs 
 	dh_installdocs
-	dh_installman debian/postgresql_autodoc.1
+	dh_installman # debian/sqlautodoc.1
 	dh_link
 	dh_compress
 	dh_fixperms

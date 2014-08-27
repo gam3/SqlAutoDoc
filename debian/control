@@ -1,20 +1,20 @@
-Source: postgresql-autodoc
+Source: sqlautodoc
 Section: database
 Priority: optional
-Maintainer: Tim Retout <diocles@debian.org>
+Maintainer: G. Allen Morris III <gam3@gam3.net>
 Build-Depends: debhelper (>> 7)
-Build-Depends-Indep: libdbd-pg-perl, libhtml-template-perl, libterm-readkey-perl
+Build-Depends-Indep: ruby-pg, libruby, ruby-nokogiri
 Standards-Version: 3.8.4
-Homepage: http://www.rbt.ca/autodoc/
-Vcs-Git: git://git.debian.org/git/collab-maint/postgresql-autodoc.git
-Vcs-Browser: http://git.debian.org/?p=collab-maint/postgresql-autodoc.git
+Homepage: http://github.com/gam3/SqlAutoDoc
+Vcs-Git: https://github.com/gam3/SqlAutoDoc.git
+Vcs-Browser: https://github.com/gam3/SqlAutoDoc.git
 
-Package: postgresql-autodoc
+Package: sqlautodoc
 Architecture: all
-Depends: ${misc:Depends}, ${perl:Depends}, libdbd-pg-perl, libhtml-template-perl, libterm-readkey-perl
+Depends: ${misc:Depends}, ${ruby:Depends}, ruby-pg, libruby, ruby-nokogiri
 Recommends: graphviz, docbook-book, dia | dia-gnome, lynx | www-browser
-Description: Utility to create a PostgreSQL database schema overview in HTML, DOT and XML
- This is a utility which will run through PostgreSQL tables and returns HTML,
+Description: Utility to create a SQL database schema overview in HTML, DOT and XML
+ This is a utility which will run through SQL tables and returns HTML,
  DOT, and 2 styles of XML which describes the database.
  .
  The HTML is human readable (via webbrowser). The first style of XML is
