@@ -1,8 +1,32 @@
+#
+# Copyright 2014 G. Allen Morris III
+#
+# This file may be used under the terms of the GNU General Public
+# License version 2.0 as published by the Free Software Foundation
+# and appearing in the file LICENSE.GPL included in the packaging of
+# this file.  Please review the following information to ensure GNU
+# General Public Licensing requirements will be met:
+# http://www.trolltech.com/products/qt/opensource.html
+#
+# This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+# WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+#
+
+begin
+  require 'pg'
+rescue LoadError
+  raise "you should install 'pb'"
+end
 
 module SqlAutoDoc
   class Collect
+    # Pg objects collect data from a PostgreSql database
     class Pg < Collect
-      def collect(options)
+      # control the display of Postresql types
+      class Type < Collect::Type
+      end
+      # collect data from the described connection
+      def self.collect(options)
 	database_name = options.database
 	host = options.host
 	user = options.user || ENV['USER']
@@ -108,6 +132,7 @@ module SqlAutoDoc
 	    WHERE attnum > 0
 	      AND attisdropped IS FALSE
 	      AND attrelid = $1
+	    ORDER BY attnum
 	SQL
 
 	conn.prepare('primary keys', <<-SQL)
@@ -222,11 +247,20 @@ module SqlAutoDoc
 
 	# [ system_schema_list, schemapattern ]
 	conn.prepare('schema', <<-SQL)
-      SELECT pg_catalog.obj_description(oid, 'pg_namespace') AS comment
-	  , nspname as namespace
-       FROM pg_catalog.pg_namespace
-      WHERE pg_namespace.nspname !~ $1
-	AND pg_namespace.nspname ~ $2;
+SELECT pg_catalog.obj_description(oid, 'pg_namespace') AS comment
+    , nspname as namespace
+ FROM pg_catalog.pg_namespace
+WHERE pg_namespace.nspname !~ $1
+  AND pg_namespace.nspname ~ $2;
+	SQL
+
+        # [ datbase_name, schema_name, table_name ]
+	conn.prepare('triggers', <<-SQL)
+SELECT *
+  FROM information_schema.triggers
+ WHERE event_object_catalog = $1
+   AND event_object_schema = $2
+   AND event_object_table = $3
 	SQL
 
 	conn.exec("set client_encoding to 'UTF-8'")
@@ -252,8 +286,8 @@ module SqlAutoDoc
 	  r = OpenStruct.new(row)
 	  reloid = r.oid
 	  relname = r.tablename
-	  schema = database.get_schema(r.namespace)
-	  table = schema.get_table(relname)
+	  schema = database.add_schema(r.namespace)
+	  table = schema.add_table(relname)
 	  table.type = r.reltype
 	  table.table_description = r.table_description
 	  table.view_definition = r.view_definition
@@ -277,7 +311,7 @@ module SqlAutoDoc
 	  conn.exec_prepared('columns', [ r.oid ]).each do |row|
 	    column_row = OpenStruct.new(row)
 
-	    column = table.get_column(column_row.column_name)
+	    column = table.add_column(column_row.column_name, type: Type.new(column_row.column_type))
 	    column.order = column_row.attnum
 	    column.primary_key = false
 	    column.fktable = false
@@ -306,13 +340,9 @@ module SqlAutoDoc
 	    end
 
 	    collist.each do |column_name|
-	      column = table.get_column(column_name)
+	      column = table.add_column(column_name)
 	      column.add_constraint(pricols.constraint_name, pricols.constraint_type.to_sym)
 	    end
-
-      #puts pricols.constraint_definition
-	#    puts "Primary Key: #{pricols.constraint_name}"
-	#    puts "Primary Key: #{pricols.constraint_definition}"
 	  end
 
 	  # FOREIGN KEYS like UNIQUE indexes can appear several times in
@@ -339,24 +369,28 @@ module SqlAutoDoc
 	    fkeylist.zip(keylist).each do |list|
 	      fkey = list[0]
 	      key = list[1]
-	      table = database.get_table(fkey.namespace, fkey.relation_name)
-	      column = table.get_column(fkey.attribute_name)
-	      table.add_fk_ref(fkey.attribute_name, key.namespace, key.relation_name, key.attribute_name)
-	      column.add_fk_ref(key.namespace, key.relation_name, key.attribute_name)
-	      database.get_column(key.namespace, key.relation_name, key.attribute_name).set_fk(fkey.namespace, fkey.relation_name, fkey.attribute_name)
+	      database.get_column(key.namespace, key.relation_name, key.attribute_name).set_foreign_key(fkey.namespace, fkey.relation_name, fkey.attribute_name)
 	    end
 	  end
 
 	  # Pull out index information
 	  conn.exec_prepared('indexes', [ schema.name, table.name ]).each do |row|
 	    i = OpenStruct.new row
-	    table.add_index( i.schemaname, i.tablename, i.indexname, i.indexdef, i.definition )
+	    table.add_index( i.indexname, indexdef: i.indexdef, definition: i.definition )
 	  end
 
 	  # Extract Inheritance information
 	  conn.exec_prepared('inheritance', [ schema.name, table.name, schemapattern ]).each do |row|
 	    inheritance = OpenStruct.new row
 	    table.add_inheritance(inheritance.par_schemaname, inheritance.par_tablename, inheritance.chl_schemaname, inheritance.chl_tablename)
+	  end
+
+	  conn.exec_prepared('triggers', [ database.name, schema.name, table.name ]).each do |row|
+	    i = OpenStruct.new row
+
+	    table.add_trigger(
+	      i.trigger_name,
+	    )
 	  end
 	end
 
@@ -366,7 +400,7 @@ module SqlAutoDoc
 	  function.function_args.split(' ').each do |type|
 	    conn.exec_prepared('function_arg', [ type ]).each do |row|
 	      function_args = OpenStruct.new(row)
-      #  puts function_args.namespace
+#  puts function_args.namespace
 	    end
 	  end
 	end
@@ -377,6 +411,7 @@ module SqlAutoDoc
 	  schema = database.get_schema(schema_row.namespace)
 	  schema.comment = schema_row.comment
 	end
+	database.finalize
       end # collect database information
     end # class Pg
   end # class Collector

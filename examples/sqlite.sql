@@ -24,7 +24,7 @@ CREATE TABLE product_types (
 );
 
 CREATE TABLE products (
-    "id" INTEGER AUTOINCRIMENT PRIMARY KEY,
+    "id" INTEGER,
     "name" text not null UNIQUE,
     price numeric CHECK (price > 0),
     product_type_id integer references product_types(id)

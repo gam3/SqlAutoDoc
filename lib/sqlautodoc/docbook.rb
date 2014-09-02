@@ -3,8 +3,11 @@ require 'nokogiri'
 
 module SqlAutoDoc
   class Render
+    # The Docbook class outputs DocBook xml
     class Docbook
-      def self.generate(database)
+      # Render _database_ into DocBook XML
+      # @param [Database] database
+      def self.render(database)
 	builder = Nokogiri::XML::Builder.new do |xml|
 	  xml.doc.create_internal_subset(
 	    'book',
@@ -98,7 +101,7 @@ module SqlAutoDoc
 		      if table.fk_refs?
 			xml.itemizedlist {
 			  xml.title "Tables referencing #{table.name} via Foreign Key Constraints"
-			  table.each_fk do |fk|
+			  table.referenced_by_foreign_key_each do |fk|
 			    xml.listitem {
 			      xml.para {
 				xml.xref :linkend => fk
@@ -114,7 +117,9 @@ module SqlAutoDoc
 	    end
 	  }
 	end
-	builder.to_xml
+	File.open("#{database.name}.sgml", 'w:utf-8') do |file|
+	  file.print builder.to_xml
+	end
       end
     end
   end

@@ -15,11 +15,15 @@
 raise "error" if defined? SqlAutoDoc::VERSION
 unless defined? SqlAutoDoc::VERSION
   module SqlAutoDoc
+    # The version information
     module VERSION
+      # major version
       MAJOR = 0
-      MINOR = 1
-      TINY  = 0
-
+      # minor version
+      MINOR = 0
+      # patch level
+      TINY  = 2
+      # the version string
       STRING = [MAJOR, MINOR, TINY].join('.')
     end
   end

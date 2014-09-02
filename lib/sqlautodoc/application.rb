@@ -1,13 +1,46 @@
+#
+# Copyright 2014 G. Allen Morris III
+#
+# This file may be used under the terms of the GNU General Public
+# License version 2.0 as published by the Free Software Foundation
+# and appearing in the file LICENSE.GPL included in the packaging of
+# this file.  Please review the following information to ensure GNU
+# General Public Licensing requirements will be met:
+# http://www.trolltech.com/products/qt/opensource.html
+#
+# This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+# WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+#
 
 require 'optparse'
+require 'ostruct'
+require 'sqlautodoc'
+require 'sqlautodoc/version'
 
 module SqlAutoDoc
+  # A Class to allow CLI access to SqlAutoDoc
   class Application
+    # Run the application
+    # @return [true, false]
     def run
+      @options = options = OpenStruct.new
       OptionParser.new do |opts|
 	opts.banner = "Usage: #{File.basename($0)} [options]"
 	opts.separator ""
 	opts.separator "Specific options:"
+	opts.on("-c", "--collector dbtyep", String, "Specify the database type [pq, sqlite, mysql]") do |value|
+	  case value
+	  when /^s/
+	    value = 'sqlite3'
+	  when /^p/
+	    value = 'pg'
+	  when /^m/
+	    value = 'mysql'
+	  else
+	    raise "Unknown database type #{value}"
+	  end
+	  options.database_type = value
+	end
 	opts.on("-d", "--database dbname", String, "Specify database name to connect to (default: $database)") do |value|
 	  options.database = value
 	end
@@ -52,12 +85,55 @@ module SqlAutoDoc
 	  exit
 	end
 	opts.on("--version", nil, "output version information and exit") do |value|
-	  puts VERSION
+	  puts <<-EOF
+sqlautodoc #{SqlAutoDoc::VERSION::STRING}
+Copyright (C) 2014 G. Allen Morris III
+License GPLv2: GNU GPL version 2 or later <http://www.gnu.org/licenses/gpl-2.0.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by G. Allen Morris III
+          EOF
 	  exit
 	end
       end.parse!
-    end
 
+      unless options.database_type
+        if options.database.match(/\.db$/)
+	  options.database_type = :sqlite3
+	else
+	  options.database_type = :pg
+	end
+        
+      end
+      case options.database_type.to_sym
+      when :sqlite3
+	require 'sqlautodoc/sqlite3'
+	data = Collect::Sqlite3.collect(options)
+      when :pg
+	require 'sqlautodoc/postgresql'
+	data = Collect::Pg.collect(options)
+      else
+        raise "unsupported database type #{options.database_type}"
+      end
+
+      begin
+	require 'sqlautodoc/html'
+	Render::Html.render
+      rescue => error
+        puts "HTML #{error}"
+	puts error.backtrace
+      end
+      begin
+	require 'sqlautodoc/docbook'
+	Render::Docbook.render(Database.first)
+      rescue => error
+        puts "Docbook #{error}"
+      end
+      true
+    end
+    # run the application
+    # @return [true, false]
     def self.run
       application = self.new
       application.run

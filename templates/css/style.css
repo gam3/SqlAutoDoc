@@ -1,0 +1,82 @@
+body {
+padding: 0 20px;
+font-family: "Lucida Sans", "Lucida Grande", Verdana, Arial, sans-serif;
+font-size: 13px;
+}
+BODY {
+color:	#000000;
+background-color: #FFFFFF;
+font-family: Helvetica, sans-serif;
+}
+
+P {
+margin-top: 5px;
+margin-bottom: 5px;
+}
+
+P.w3ref {
+font-size: 8pt;
+font-style: italic;
+text-align: right;
+}
+
+P.detail {
+font-size: 10pt;
+}
+
+.error {
+color: #FFFFFF;
+background-color: #FF0000;
+}
+
+H1, H2, H3, H4, H5, H6 {
+}
+
+OL {
+list-style-type: upper-alpha;
+}
+
+UL.topic {
+list-style-type: upper-alpha;
+}
+
+LI.topic {
+font-weight : bold;
+}
+
+HR {
+color: #00FF00;
+background-color: #808080;
+}
+
+TABLE {
+border-width: medium;
+padding: 3px;
+background-color: #000000;
+width: 90%;
+}
+
+CAPTION {
+text-transform: capitalize;
+font-weight : bold;
+font-size: 14pt;
+}
+
+TH {
+color: #FFFFFF;
+background-color: #000000;
+text-align: left;
+}
+
+TR {
+color: #000000;
+background-color: #000000;
+vertical-align: top;
+}
+
+TR:nth-child(even) { background-color: #F0F0F0; }
+TR:nth-child(odd) { background-color: #D8D8D8; }
+TD { font-size: 12pt; }
+TD:nth-child(0) { font-weight : bold; width: 20%; }
+TD:nth-child(1)  { font-style: italic; width: 15%; }
+TD:nth-child(2)  { font-size: 12px; }
