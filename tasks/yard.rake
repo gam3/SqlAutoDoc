@@ -10,7 +10,8 @@ begin
       yardoc.name = 'yard'
       yardoc.options = ['--verbose']
       yardoc.files = [
-        'lib/**/*.rb', 'bin/**/*', '-', 'README.md', 'CHANGELOG.md', 'LICENSE', 'docs/*.md', 'docs/sqlautodoc.rb'
+        '--proteced', '--no-private',
+        'lib/**/*.rb', 'bin/**/*', 'spec/**/*', '-', 'README.md', 'CHANGELOG.md', 'LICENSE', 'docs/*.md', 'docs/sqlautodoc.rb'
       ]
     end
   end
@@ -24,3 +25,11 @@ rescue LoadError
   desc 'Alias to doc:rdoc'
   task 'doc' => 'doc:rdoc'
 end
+
+__END__
+
+--protected
+--no-private
+--exclude /server/templates/
+--asset docs/images:images
+-

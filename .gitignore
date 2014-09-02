@@ -1,5 +1,13 @@
 .*.swp
-data
-.yardoc/
-doc/
-triggers
+/.yardoc
+/doc
+/sqlautodoc-*.gem
+/HELPER
+/Gemfile
+/Gemfile.lock
+/Makefile
+/css
+/gam3.html
+/gam4.html
+/main.html
+/*.sgml

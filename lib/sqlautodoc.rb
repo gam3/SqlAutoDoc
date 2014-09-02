@@ -26,7 +26,21 @@ module SqlAutoDoc
   class Database
     # This Hash contains each database indexed by name
     @@databases = Hash.new{ |h, k| h[k] = Database.new(k) }
+    def self.reset
+      @@databases.clear
+    end
     # @param [String] database_name The name of the database
+    # @return [Database] 
+    def self.add_database(database_name)
+      @@databases[database_name]
+    end
+    # @return [Fixnum] The number of database definded
+    def self.size
+      @@databases.size
+    end
+    # @param [String] database_name The name of the database
+    # @return [Database] 
+    # @raise [ArgumentError] 
     def self.get_database(database_name)
       raise ArgumentError unless @@databases.include? database_name
       @@databases[database_name]
