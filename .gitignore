@@ -1,2 +1,5 @@
 .*.swp
 data
+.yardoc/
+doc/
+triggers
