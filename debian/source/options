@@ -1,0 +1,4 @@
+tar-ignore='sqlautodoc/.yardoc'
+tar-ignore='sqlautodoc/.git'
+tar-ignore='sqlautodoc/doc'
+tar-ignore='sqlautodoc/pkg'

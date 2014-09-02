@@ -13,7 +13,7 @@ build-indep: build-stamp
 
 build-stamp: $(QUILT_STAMPFN)
 	dh_testdir
-	$(MAKE) PREFIX=/usr
+	rake
 	touch build-stamp
 
 clean: clean-patched unpatch
@@ -22,7 +22,6 @@ clean-patched:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp 
-	$(MAKE) clean
 	dh_clean
 
 install: build
@@ -30,7 +29,8 @@ install: build
 	dh_testroot
 	dh_prep
 	dh_installdirs
-	$(MAKE) install PREFIX=/usr DESTDIR=$(CURDIR)/debian/sqlautodoc/
+	rake gem
+	gem install --vendor --bindir /usr/bin --build-root $(CURDIR)/debian/sqlautodoc/ pkg/*.gem
 
 
 binary-arch: build install

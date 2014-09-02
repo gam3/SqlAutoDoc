@@ -18,6 +18,7 @@ namespace :gem do
     s.summary = PKG_SUMMARY
     s.description = PKG_DESCRIPTION
     s.rubyforge_project = RUBY_FORGE_PROJECT
+    s.license = PKG_LICENSE
 
     s.files = PKG_FILES.to_a
 
@@ -25,15 +26,10 @@ namespace :gem do
     s.extra_rdoc_files = %w( README.md )
     s.rdoc_options.concat ['--main',  'README.md']
 
-    s.add_runtime_dependency('addressable', '>= 2.3.1')
-    s.add_runtime_dependency('multi_json', '>= 1.0.0')
-    s.add_runtime_dependency('extlib', '>= 0.9.15')
-
-    s.add_development_dependency('rake', '>= 0.9.0')
-    s.add_development_dependency('rspec', '>= 2.11.0')
-    s.add_development_dependency('launchy', '>= 2.1.1')
+    s.add_development_dependency 'rake', '~> 0.9', '>= 0.9.0'
 
     s.require_path = 'lib'
+    s.executables  = ['sqlautodoc']
   end
 
   Gem::PackageTask.new(GEM_SPEC) do |p|

@@ -16,6 +16,7 @@ RUBY_FORGE_USER    = 'gam3'
 RUBY_FORGE_PATH    = "/var/www/gforge-projects/#{RUBY_FORGE_PROJECT}"
 RUBY_FORGE_URL     = "http://#{RUBY_FORGE_PROJECT}.rubyforge.org/"
 
+
 PKG_AUTHOR         = 'G. Allen Morris III'
 PKG_AUTHOR_EMAIL   = 'gam3@gam3.net'
 PKG_HOMEPAGE       = RUBY_FORGE_URL
@@ -24,6 +25,7 @@ PKG_DESCRIPTION    = <<-TEXT
 An implementation of the JSON Schema specification. Provides automatic parsing
 for any given JSON Schema.
 TEXT
+PKG_LICENSE	   = 'GPL-2.0'
 
 PKG_FILES = FileList[
     'lib/**/*', 'spec/**/*', 'vendor/**/*',

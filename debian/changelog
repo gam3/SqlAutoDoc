@@ -1,4 +1,10 @@
-sqlautodoc (0.1.0) unstable; urgency=low
+sqlautodoc (0.0.2) unstable; urgency=low
+
+  * Added Sqlite3 support
+
+ -- G. Allen Morris III <gam3@gam3.net>  Mon, 01 Sep 2014 23:47:43 -0700
+
+sqlautodoc (0.0.1) unstable; urgency=low
 
   * Initial Release.
 
